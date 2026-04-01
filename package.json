@@ -3,6 +3,11 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "node api/mcp.js"
+    "start": "node index.js",
+    "dev": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
   }
 }

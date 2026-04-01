@@ -6,9 +6,6 @@ app.use(cors());
 app.use(express.json());
 
 // ========== METADATA UNTUK SEMUA AGENT ==========
-// Kita akan bedakan berdasarkan User-Agent atau parameter nanti
-// Untuk sekarang, kita kembalikan semua tools
-
 const getAllTools = () => {
   return [
     // Quantiva (ID: 22524)
@@ -43,7 +40,7 @@ const getAllTools = () => {
 
 const getAllPrompts = () => {
   return [
-    { name: "market_forecast", description: "Generate market forecast report" },
+    { name: "forecast_report", description: "Generate market forecast report" },
     { name: "investment_analysis", description: "Analyze investment opportunities" },
     { name: "dashboard_creation", description: "Create analytics dashboard" },
     { name: "executive_summary", description: "Generate executive summary" },
@@ -89,71 +86,79 @@ app.get('/mcp', (req, res) => {
 
 // Main MCP endpoint (POST)
 app.post('/mcp', async (req, res) => {
-  const { method, params, id } = req.body;
-  
-  console.log(`Received method: ${method}`);
-  
-  // tools/list - untuk menampilkan daftar tools
-  if (method === "tools/list") {
-    return res.json({
-      jsonrpc: "2.0",
-      id: id,
-      result: {
-        tools: getAllTools()
-      }
-    });
-  }
-  
-  // prompts/list - untuk menampilkan daftar prompts
-  if (method === "prompts/list") {
-    return res.json({
-      jsonrpc: "2.0",
-      id: id,
-      result: {
-        prompts: getAllPrompts()
-      }
-    });
-  }
-  
-  // resources/list - untuk menampilkan daftar resources
-  if (method === "resources/list") {
-    return res.json({
-      jsonrpc: "2.0",
-      id: id,
-      result: {
-        resources: getAllResources()
-      }
-    });
-  }
-  
-  // tools/call - eksekusi tool
-  if (method === "tools/call") {
-    const toolName = params?.name || "unknown";
-    const args = params?.arguments || {};
+  try {
+    const { method, params, id } = req.body;
     
-    // Simulasi eksekusi tool berdasarkan nama
-    let resultText = `✅ Tool "${toolName}" executed successfully.\n`;
-    resultText += `Parameters: ${JSON.stringify(args)}\n`;
-    resultText += `Result: Sample data for ${toolName} at ${new Date().toISOString()}`;
+    // tools/list - untuk menampilkan daftar tools
+    if (method === "tools/list") {
+      return res.json({
+        jsonrpc: "2.0",
+        id: id,
+        result: {
+          tools: getAllTools()
+        }
+      });
+    }
     
-    return res.json({
+    // prompts/list - untuk menampilkan daftar prompts
+    if (method === "prompts/list") {
+      return res.json({
+        jsonrpc: "2.0",
+        id: id,
+        result: {
+          prompts: getAllPrompts()
+        }
+      });
+    }
+    
+    // resources/list - untuk menampilkan daftar resources
+    if (method === "resources/list") {
+      return res.json({
+        jsonrpc: "2.0",
+        id: id,
+        result: {
+          resources: getAllResources()
+        }
+      });
+    }
+    
+    // tools/call - eksekusi tool
+    if (method === "tools/call") {
+      const toolName = params?.name || "unknown";
+      const args = params?.arguments || {};
+      
+      let resultText = `Tool "${toolName}" executed successfully.\n`;
+      resultText += `Parameters: ${JSON.stringify(args)}\n`;
+      resultText += `Result: Sample data for ${toolName} at ${new Date().toISOString()}`;
+      
+      return res.json({
+        jsonrpc: "2.0",
+        id: id,
+        result: {
+          content: [{
+            type: "text",
+            text: resultText
+          }]
+        }
+      });
+    }
+    
+    // Default response
+    res.json({ 
+      jsonrpc: "2.0", 
+      id: id, 
+      result: {} 
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({
       jsonrpc: "2.0",
-      id: id,
-      result: {
-        content: [{
-          type: "text",
-          text: resultText
-        }]
+      error: {
+        code: -32000,
+        message: error.message
       }
     });
   }
-  
-  // Default response untuk method yang tidak dikenal
-  res.json({ 
-    jsonrpc: "2.0", 
-    id: id, 
-    result: {} 
-  });
 });
 
 // Root endpoint

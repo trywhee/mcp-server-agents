@@ -64,6 +64,28 @@ const getAllResources = () => {
 };
 
 // ========== ENDPOINTS ==========
+// ========== ENDPOINTS ==========
+
+// METADATA AGENT SEPERTI RAILWAY (TAMBAHKAN INI)
+app.get('/mcp/agent-32', (req, res) => {
+  res.json({
+    name: "quantiva-agent",
+    version: "1.0.0",
+    protocolVersion: "2025-06-18",
+    description: "Multi-agent MCP server with 5 specialized agents (Quantiva, Nexora, DataQuant, DataAnalyst, InsightForge)",
+    transport: "streamable-http",
+    methods: ["POST"],
+    capabilities: {
+      tools: true,
+      prompts: true,
+      resources: true
+    },
+    tools: getAllTools(),
+    prompts: getAllPrompts(),
+    resources: getAllResources(),
+    status: "healthy"
+  });
+});
 
 // Health check (GET) - untuk 8004scan
 app.get('/mcp', (req, res) => {

@@ -64,25 +64,144 @@ const getAllResources = () => {
 };
 
 // ========== ENDPOINTS ==========
-// ========== ENDPOINTS ==========
+// ========== METADATA UNTUK 5 AGENT (RAILWAY STYLE) ==========
 
-// METADATA AGENT SEPERTI RAILWAY (TAMBAHKAN INI)
-app.get('/mcp/agent-32', (req, res) => {
+// 1. Quantiva Agent
+app.get('/mcp/agent-quantiva', (req, res) => {
   res.json({
-    name: "quantiva-agent",
+    name: "Quantiva Agent",
+    id: "22524",
     version: "1.0.0",
     protocolVersion: "2025-06-18",
-    description: "Multi-agent MCP server with 5 specialized agents (Quantiva, Nexora, DataQuant, DataAnalyst, InsightForge)",
+    description: "Financial analysis & market forecasting agent using ML algorithms",
     transport: "streamable-http",
     methods: ["POST"],
-    capabilities: {
-      tools: true,
-      prompts: true,
-      resources: true
-    },
-    tools: getAllTools(),
-    prompts: getAllPrompts(),
-    resources: getAllResources(),
+    capabilities: { tools: true, prompts: true, resources: true },
+    tools: [
+      { name: "market_forecast", description: "Predict market trends using ML algorithms" },
+      { name: "financial_modeling", description: "Build complex financial models" },
+      { name: "trend_analysis", description: "Analyze market trends and patterns" },
+      { name: "data_processing", description: "Process structured datasets (CSV, JSON)" }
+    ],
+    prompts: [
+      { name: "forecast_report", description: "Generate market forecast report" },
+      { name: "investment_analysis", description: "Analyze investment opportunities" }
+    ],
+    resources: [
+      { uri: "database://market-data", name: "Market Data", description: "Real-time market data" },
+      { uri: "database://financial-reports", name: "Financial Reports", description: "Historical financial reports" }
+    ],
+    status: "healthy"
+  });
+});
+
+// 2. Nexora Agent
+app.get('/mcp/agent-nexora', (req, res) => {
+  res.json({
+    name: "Nexora Agent",
+    id: "22497",
+    version: "1.0.0",
+    protocolVersion: "2025-06-18",
+    description: "Automated charting & anomaly detection agent for data visualization",
+    transport: "streamable-http",
+    methods: ["POST"],
+    capabilities: { tools: true, prompts: true, resources: true },
+    tools: [
+      { name: "automated_charting", description: "Generate automated charts from data" },
+      { name: "anomaly_detection", description: "Detect anomalies in datasets" },
+      { name: "trend_forecasting", description: "Forecast future trends" },
+      { name: "summary_report", description: "Generate AI-powered summary reports" }
+    ],
+    prompts: [
+      { name: "dashboard_creation", description: "Create analytics dashboard" },
+      { name: "executive_summary", description: "Generate executive summary" }
+    ],
+    resources: [
+      { uri: "api://endpoints", name: "API Endpoints", description: "External API connections" },
+      { uri: "csv://data", name: "CSV Data", description: "CSV dataset access" }
+    ],
+    status: "healthy"
+  });
+});
+
+// 3. DataQuant Agent
+app.get('/mcp/agent-dataquant', (req, res) => {
+  res.json({
+    name: "DataQuant Agent",
+    id: "22455",
+    version: "1.0.0",
+    protocolVersion: "2025-06-18",
+    description: "Pattern detection & financial forecasting for quantitative analysis",
+    transport: "streamable-http",
+    methods: ["POST"],
+    capabilities: { tools: true, prompts: true, resources: true },
+    tools: [
+      { name: "detect_patterns", description: "Detect patterns in structured datasets" },
+      { name: "generate_dashboard", description: "Generate interactive dashboards" },
+      { name: "forecast_financials", description: "Forecast financial metrics" },
+      { name: "automate_reporting", description: "Automate report generation" }
+    ],
+    prompts: [
+      { name: "financial_forecast", description: "Financial forecasting prompt" },
+      { name: "report_automation", description: "Automated reporting prompt" }
+    ],
+    resources: [
+      { uri: "sql://database", name: "SQL Database", description: "SQL database connection" }
+    ],
+    status: "healthy"
+  });
+});
+
+// 4. DataAnalyst Agent
+app.get('/mcp/agent-dataanalyst', (req, res) => {
+  res.json({
+    name: "DataAnalyst Agent",
+    id: "22300",
+    version: "1.0.0",
+    protocolVersion: "2025-06-18",
+    description: "Advanced data analysis & professional chart generation",
+    transport: "streamable-http",
+    methods: ["POST"],
+    capabilities: { tools: true, prompts: true, resources: true },
+    tools: [
+      { name: "data_analysis", description: "Perform advanced data analysis" },
+      { name: "chart_generation", description: "Generate professional charts" },
+      { name: "report_automation", description: "Automate reporting tasks" }
+    ],
+    prompts: [
+      { name: "business_intelligence", description: "Business intelligence analysis" },
+      { name: "market_research", description: "Market research prompt" }
+    ],
+    resources: [
+      { uri: "database://market-data", name: "Market Data", description: "Real-time market data" }
+    ],
+    status: "healthy"
+  });
+});
+
+// 5. InsightForge Agent
+app.get('/mcp/agent-insightforge', (req, res) => {
+  res.json({
+    name: "InsightForge Agent",
+    id: "22398",
+    version: "1.0.0",
+    protocolVersion: "2025-06-18",
+    description: "Statistical analysis & predictive modeling for deep insights",
+    transport: "streamable-http",
+    methods: ["POST"],
+    capabilities: { tools: true, prompts: true, resources: true },
+    tools: [
+      { name: "statistical_analysis", description: "Deep statistical analysis" },
+      { name: "predictive_modeling", description: "Build predictive models" },
+      { name: "report_creation", description: "Create professional reports" }
+    ],
+    prompts: [
+      { name: "insight_generation", description: "Generate actionable insights" },
+      { name: "data_visualization", description: "Data visualization prompt" }
+    ],
+    resources: [
+      { uri: "database://financial-reports", name: "Financial Reports", description: "Historical financial reports" }
+    ],
     status: "healthy"
   });
 });

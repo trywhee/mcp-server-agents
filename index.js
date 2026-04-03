@@ -312,6 +312,63 @@ app.get('/', (req, res) => {
 });
 
 const port = process.env.PORT || 3000;
+// ========== WEBHOOK UNTUK TOKU.AGENCY ==========
+app.post('/webhook/toku', async (req, res) => {
+  const { order_id, service, tier, requirements, customer_id } = req.body;
+  
+  console.log(`[TOKU] New order: ${order_id} - ${service} (${tier})`);
+  
+  try {
+    // Mapping service ke MCP tool
+    let toolName = "detect_patterns";
+    if (service && service.includes("Pattern")) toolName = "detect_patterns";
+    if (service && service.includes("Dashboard")) toolName = "generate_dashboard";
+    if (service && service.includes("Forecast")) toolName = "forecast_financials";
+    if (service && service.includes("Reporting")) toolName = "automate_reporting";
+    
+    // Panggil MCP tool
+    const mcpResponse = await fetch('https://mcp-server-agents-8aui.vercel.app/mcp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        method: "tools/call",
+        params: { 
+          name: toolName, 
+          arguments: { requirements: requirements || "No requirements provided" }
+        },
+        id: Date.now()
+      })
+    });
+    
+    const mcpResult = await mcpResponse.json();
+    
+    // Kirim hasil ke toku (optional, untuk tracking)
+    // await fetch(`https://toku.agency/api/orders/${order_id}/complete`, {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ result: mcpResult.result })
+    // });
+    
+    res.json({ 
+      status: "ok", 
+      order_id: order_id,
+      result: mcpResult.result 
+    });
+  } catch (error) {
+    console.error('[TOKU] Error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Endpoint test webhook
+app.get('/webhook/test', (req, res) => {
+  res.json({ 
+    status: "Webhook endpoint is ready", 
+    timestamp: new Date().toISOString(),
+    message: "Server MCP aktif dan siap menerima job dari toku.agency"
+  });
+});
 app.listen(port, () => {
   console.log(`MCP Server running on port ${port}`);
 });

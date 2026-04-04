@@ -64,7 +64,7 @@ const getAllResources = () => {
 };
 
 // ========== ENDPOINTS ==========
-// ========== METADATA UNTUK 5 AGENT (RAILWAY STYLE) ==========
+// ========== METADATA UNTUK 6 AGENT (RAILWAY STYLE) ==========
 
 // 1. Quantiva Agent
 app.get('/mcp/agent-quantiva', (req, res) => {
@@ -201,6 +201,34 @@ app.get('/mcp/agent-insightforge', (req, res) => {
     ],
     resources: [
       { uri: "database://financial-reports", name: "Financial Reports", description: "Historical financial reports" }
+    ],
+    status: "healthy"
+  });
+});
+
+// StoryWeaver AI Agent
+app.get('/mcp/agent-storyweaver', (req, res) => {
+  res.json({
+    name: "StoryWeaver AI",
+    id: "NEW_ID_NANTI",
+    version: "1.0.0",
+    protocolVersion: "2025-06-18",
+    description: "AI creative writing partner for authors, game masters, and content creators",
+    transport: "streamable-http",
+    methods: ["POST"],
+    capabilities: { tools: true, prompts: true, resources: true },
+    tools: [
+      { name: "character_generation", description: "Generate detailed character backstories" },
+      { name: "plot_twist", description: "Create unexpected plot twists" },
+      { name: "world_building", description: "Develop immersive lore and settings" },
+      { name: "dialogue_writing", description: "Generate authentic character dialogues" }
+    ],
+    prompts: [
+      { name: "story_outline", description: "Generate story outline based on genre" },
+      { name: "character_arc", description: "Develop character growth arc" }
+    ],
+    resources: [
+      { uri: "database://writing-prompts", name: "Writing Prompts", description: "Creative writing prompts database" }
     ],
     status: "healthy"
   });
